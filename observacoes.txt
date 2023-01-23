@@ -1,0 +1,13 @@
+percentualGato - float
+percentualCachorro - float
+avaliado - bollean
+motivo - select
+
+Certo, aparece gato;
+Certo, aparece cachorro;
+Certo, aparece ambos;
+Certo, não aparece nada;
+Errado, não aparece gato;
+Errado, não aparece cachorro;
+Errado, aparece ambos;
+Errado, não aparece nada;
