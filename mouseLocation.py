@@ -1,7 +1,6 @@
 import pyautogui as pyg
 
-# para saber a coordenada do mouse só descomentar essa linha
-print('Press Ctrl-C to quit.')
+print('Apertar Ctrl-C para fechar.')
 try:
     while True:
         x, y = pyg.position()

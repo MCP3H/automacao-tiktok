@@ -1,6 +1,10 @@
-import funcoespyautogui as funpy
+import funcoespyautogui as pya
+import funcoesdb as db
 
-funpy.abrirTiktok()
-funpy.abrirMidia()
-funpy.curtirVideo()
-funpy.copiarLinkVideo()
+pya.abrirTiktok()
+pya.abrirMidia()
+
+videoURL = pya.copiarLinkVideo()
+db.salvarVideo(videoURL)
+
+db.fecharConexao()

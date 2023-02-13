@@ -75,6 +75,7 @@ def copiarLinkVideo():
     pyg.click(x=1190, y=65, duration=0.5)
     pyg.hotkey('ctrl', 'c')
     link = pyperclip.paste()
+    return link
 
 
 def fecharTiktok():

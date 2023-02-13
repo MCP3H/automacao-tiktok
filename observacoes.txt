@@ -3,6 +3,7 @@ percentualCachorro - float
 avaliado - bollean
 motivo - select
 
+motivos:
 Certo, aparece gato;
 Certo, aparece cachorro;
 Certo, aparece ambos;
