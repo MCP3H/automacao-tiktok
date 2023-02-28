@@ -47,12 +47,12 @@ def fecharMidia():
 
 def curtirVideo():
     time.sleep(_delayFuncao)
-    coracaoLocation = pyg.locateCenterOnScreen('imagens/coracao.png')
-    if(coracaoLocation != 'None'):
-        pyg.moveTo(x=coracaoLocation.x, y=coracaoLocation.y, duration=0.5)
-        pyg.click()
-    else:
-        pyg.doubleClick(x=620, y=550, duration=0.5) 
+    # coracaoLocation = pyg.locateCenterOnScreen('img/coracao.png')
+    # if(coracaoLocation != 'None'):
+    #     pyg.moveTo(x=coracaoLocation.x, y=coracaoLocation.y, duration=0.5)
+    #     pyg.click()
+    # else:
+    pyg.doubleClick(x=620, y=550, duration=0.5)
 
 
 def passarVideo():
@@ -81,4 +81,3 @@ def copiarLinkVideo():
 def fecharTiktok():
     time.sleep(_delayFuncao)
     pyg.click(x=1890, y=20, duration=0.5)
-

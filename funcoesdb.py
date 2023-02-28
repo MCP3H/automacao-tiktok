@@ -1,3 +1,4 @@
+# baixar o MySQL, se for Windows acesse o link: https://dev.mysql.com/downloads/installer/
 import mysql.connector  # baixar o connector: pip install mysql-connector-python
 import datetime
 

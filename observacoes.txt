@@ -1,3 +1,5 @@
+pip freeze -> vem modulos baixados
+
 percentualGato - float
 percentualCachorro - float
 avaliado - bollean
