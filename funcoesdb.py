@@ -5,11 +5,14 @@ import datetime
 # CREATE TABLE `video` (
 #   `idVideo` int NOT NULL AUTO_INCREMENT,
 #   `videoURL` varchar(255) DEFAULT NULL,
-#   `videoData` datetime DEFAULT NULL,
+#   `videoData` datetime DEFAULT CURRENT_TIMESTAMP,
+#   `qteFrameVideo` int DEFAULT 0,
 #   `apareceCachorro` tinyint DEFAULT 0,
-#   `percentualCachorro` float DEFAULT NULL,
+#   `percentualCachorro` float DEFAULT 0,
+#   `qteFrameCachorro` int DEFAULT 0,
 #   `apareceGato` tinyint DEFAULT 0,
-#   `percentualGato` float DEFAULT NULL,
+#   `percentualGato` float DEFAULT 0,
+#   `qteFrameGato` int DEFAULT 0,
 #   `avaliado` tinyint DEFAULT 0,
 #   `motivo` varchar(255) DEFAULT NULL,
 #   PRIMARY KEY (`idVideo`)
@@ -38,30 +41,8 @@ def listarVideosNaoAvaliados():
     return resultado
 
 
-def salvarVideo(videoURL):
-    videoData = datetime.datetime.now()
-    comando = f'INSERT INTO video (videoURL, videoData) VALUES ("{videoURL}", "{videoData}")'
-    cursor.execute(comando)
-    conexao.commit()
-
-
-def salvarVideoCachorro(videoURL, percentualCachorro):
-    videoData = datetime.datetime.now()
-    comando = f'INSERT INTO video (videoURL, videoData, apareceCachorro, percentualCachorro) VALUES ("{videoURL}", "{videoData}", 1, {percentualCachorro})'
-    cursor.execute(comando)
-    conexao.commit()
-
-
-def salvarVideoGato(videoURL, percentualGato):
-    videoData = datetime.datetime.now()
-    comando = f'INSERT INTO video (videoURL, videoData, apareceGato, percentualGato) VALUES ("{videoURL}", "{videoData}", 1, {percentualGato})'
-    cursor.execute(comando)
-    conexao.commit()
-
-
-def salvarVideoCachorroGato(videoURL, percentualCachorro, percentualGato):
-    videoData = datetime.datetime.now()
-    comando = f'INSERT INTO video (videoURL, videoData, apareceCachorro, percentualCachorro, apareceGato, percentualGato) VALUES ("{videoURL}", "{videoData}", 1, {percentualCachorro}, 1, {percentualGato})'
+def salvarVideo(videoURL, qteFrameVideo, apareceCachorro, qteFrameCachorro, percentualCachorro, apareceGato, qteFrameGato, percentualGato):
+    comando = f'INSERT INTO video (videoURL, qteFrameVideo, apareceCachorro, qteFrameCachorro, percentualCachorro, apareceGato, qteFrameGato, percentualGato) VALUES ("{videoURL}","{qteFrameVideo}","{apareceCachorro}","{qteFrameCachorro}","{percentualCachorro}","{apareceGato}","{qteFrameGato}","{percentualGato}")'
     cursor.execute(comando)
     conexao.commit()
 

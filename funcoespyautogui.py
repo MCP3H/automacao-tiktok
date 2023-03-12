@@ -1,16 +1,11 @@
 import webbrowser
 import pyautogui as pyg
-import time
 import numpy as np
 from PIL import ImageGrab
 import pyperclip
 
-_delayFuncao = 1
-
-
 def abrirTiktok():
     webbrowser.open('https://www.tiktok.com/')
-    time.sleep(5)
 
 
 # def entrarConta():
@@ -36,17 +31,14 @@ def abrirTiktok():
 
 
 def abrirMidia():
-    time.sleep(_delayFuncao)
     pyg.click(x=1055, y=700, duration=0.5)
 
 
 def fecharMidia():
-    time.sleep(_delayFuncao)
     pyg.click(x=50, y=135, duration=0.5)
 
 
 def curtirVideo():
-    time.sleep(_delayFuncao)
     # coracaoLocation = pyg.locateCenterOnScreen('img/coracao.png')
     # if(coracaoLocation != 'None'):
     #     pyg.moveTo(x=coracaoLocation.x, y=coracaoLocation.y, duration=0.5)
@@ -56,22 +48,18 @@ def curtirVideo():
 
 
 def passarVideo():
-    time.sleep(_delayFuncao)
     pyg.click(x=1190, y=570, duration=0.5)
 
 
 def voltarVideo():
-    time.sleep(_delayFuncao)
     pyg.click(x=1190, y=490, duration=0.5)
 
 
 def mutarVideo():
-    time.sleep(_delayFuncao)
     pyg.click(x=1190, y=980, duration=0.5)
 
 
 def copiarLinkVideo():
-    time.sleep(_delayFuncao)
     pyg.click(x=1190, y=65, duration=0.5)
     pyg.hotkey('ctrl', 'c')
     link = pyperclip.paste()
@@ -79,5 +67,4 @@ def copiarLinkVideo():
 
 
 def fecharTiktok():
-    time.sleep(_delayFuncao)
     pyg.click(x=1890, y=20, duration=0.5)
