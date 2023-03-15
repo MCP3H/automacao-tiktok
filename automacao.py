@@ -18,11 +18,10 @@ if __name__ == '__main__':
     sec_video = int(input()) + delay
 
     print("*************************************************")
-    num_processes = 4
-    model = torch.hub.load('ultralytics/yolov5', 'yolov5s',  device=0, _verbose=False)
+    model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
     model.share_memory()
     print("*************************************************")
-    print("MODELO CARREGADO NAS GPU")
+    print("MODELO CARREGADO")
     
     pya.abrirTiktok()
     time.sleep(10)
@@ -49,6 +48,7 @@ if __name__ == '__main__':
         db.salvarVideo(videoURL, len(analise.list_frame), 
                        analise.apareceCachorro, len(analise.list_conf_dog), analise.avg_conf_dog, 
                        analise.apareceGato, len(analise.list_conf_cat), analise.avg_conf_cat)
+
         videos += 1
 
         pya.passarVideo()

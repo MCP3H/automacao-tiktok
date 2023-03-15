@@ -15,10 +15,10 @@ class Video:
         self.apareceGato = 0
         self.avg_conf_dog = 0
         self.avg_conf_cat = 0
-        self.list_frame = []
         self.has_dog = 0
-        self.list_conf_dog = []
         self.has_cat = 0
+        self.list_frame = []
+        self.list_conf_dog = []
         self.list_conf_cat = []
         self.list_threads = []
 
@@ -29,7 +29,7 @@ class Video:
         return frame
     
     def pred_frame(self, frame):
-        t = threading.Thread(target=self.prediction, args=[frame], daemon=True)
+        t = threading.Thread(target=self.prediction, args=[frame])
         self.list_threads.append(t)
         t.start()
 
@@ -45,7 +45,7 @@ class Video:
             confidence = data_frame.loc[index]['confidence']
             name = data_frame.loc[index]['name']
 
-            if (name == 'dog' and confidence >= 0.5):
+            if (name == 'dog' and confidence >= 0.5): 
                 self.has_dog +=1
                 self.list_conf_dog.append(confidence)
 
@@ -58,20 +58,24 @@ class Video:
         begin_rframe = time.perf_counter()
 
         first_frame = self.get_frame(bbox=(370,130,870,1020))
-        self.pred_frame(first_frame)
+        #self.pred_frame(first_frame)
 
         sec_frame = self.get_frame(bbox=(370,130,870,1020))
-        self.pred_frame(sec_frame)
+        #self.pred_frame(sec_frame)
         
         while(True):
             frame = self.get_frame(bbox=(370,130,870,1020))
-            self.pred_frame(sec_frame)
+            #self.pred_frame(sec_frame)
             end_rframe = time.perf_counter()
-            if (end_rframe - begin_rframe > self.sec_video): 
-                break
-            if (np.array_equiv(frame, first_frame) or np.array_equiv(frame, sec_frame)): 
+
+            if (np.array_equiv(frame, first_frame) or np.array_equiv(frame, sec_frame) 
+             or end_rframe - begin_rframe > self.sec_video): 
                 self.sec_video = end_rframe - begin_rframe
                 break
+
+        ## frames ta estranho, ele capta que tem cachorro, mas ta salvando vazio no banco por algum motivo 
+        for frame in self.list_frame:
+            self.pred_frame(frame)
 
             # # Cria tela com a analise dos frames
             # frame_color = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -99,9 +103,9 @@ class Video:
         # Se em aproximadamente 20 segundos, for pego 420 frames
         # Então, são 21 frames por segundos
         # Logo, para o critério de aceitação o conteudo de animal domestico precisa ter 21x2 = 42 frames
-        
+
         qtde_frames = len(self.list_frame)
-        fps = round(qtde_frames/self.sec_video)
+        fps = qtde_frames/self.sec_video
         criterio_aceitacao = fps * 2
 
         has_qtde_frame_dog = self.has_dog >= criterio_aceitacao
