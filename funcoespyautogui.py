@@ -4,9 +4,8 @@ import numpy as np
 from PIL import ImageGrab
 import pyperclip
 
-def abrirTiktok():
+def openTiktok():
     webbrowser.open('https://www.tiktok.com/')
-
 
 # def entrarConta():
 #     # mouse botão "Entrar"
@@ -29,16 +28,27 @@ def abrirTiktok():
 #     # mouse "Entrar"
 #     pyg.click(x=960, y=590)
 
+def searchVideo(param):
+    pyg.click(x=940, y=125, duration=0.5)
+    pyg.write(param)
+    pyg.press('enter')
 
-def abrirMidia():
-    pyg.click(x=1055, y=700, duration=0.5)
+
+def restartVideo(param):
+    pyg.click(x=940, y=125, duration=0.5)
+    pyg.write(param)
+    pyg.press('enter')
 
 
-def fecharMidia():
+def openVideo():
+    pyg.click(x=850, y=460, duration=0.5)
+
+
+def closeVideo():
     pyg.click(x=50, y=135, duration=0.5)
 
 
-def curtirVideo():
+def likeVideo():
     # coracaoLocation = pyg.locateCenterOnScreen('img/coracao.png')
     # if(coracaoLocation != 'None'):
     #     pyg.moveTo(x=coracaoLocation.x, y=coracaoLocation.y, duration=0.5)
@@ -47,24 +57,20 @@ def curtirVideo():
     pyg.doubleClick(x=620, y=550, duration=0.5)
 
 
-def passarVideo():
+def passVideo():
     pyg.click(x=1190, y=570, duration=0.5)
 
 
-def voltarVideo():
+def rewindVideo():
     pyg.click(x=1190, y=490, duration=0.5)
 
 
-def mutarVideo():
-    pyg.click(x=1190, y=980, duration=0.5)
-
-
-def copiarLinkVideo():
-    pyg.click(x=1190, y=65, duration=0.5)
+def copyLinkVideo():
+    pyg.click(x=1190, y=65)
     pyg.hotkey('ctrl', 'c')
     link = pyperclip.paste()
     return link
 
 
-def fecharTiktok():
+def closeTiktok():
     pyg.click(x=1890, y=20, duration=0.5)
