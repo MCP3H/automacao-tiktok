@@ -33,34 +33,34 @@ if __name__ == '__main__':
     print("*")
     print("Digita a chave do que vai ser detectado nos vídeos:", end=" ")
     settings.chave = int(input())
-    settings.chave_name = model.names[settings.chave]
+    settings.param = model.names[settings.chave]
 
     print("*************************************************")
     print("Quanto tempo de frame vai ser analisado dos vídeos (em segundos/video completo(0)):", end=" ")
-    settings.sec_video = int(input())
+    settings.time_video_sec = int(input())
 
     print("*************************************************")
-    print("Qual o percentual de frames que o objeto(" + settings.chave_name + ") tem que aparecer no vídeo (0 a 100):", end=" ")
-    settings.perc = int(input()) / 100
+    print("Qual o percentual de frames que o objeto(" + settings.param + ") tem que aparecer no vídeo (0 a 100):", end=" ")
+    settings.perc_video = int(input())
 
     print("*************************************************")
     print("Tempo de execução(0) ou quantidade de vídeos(1):", end=" ")
     settings.type_exe = int(input())
 
-    settings.min = 0
+    settings.time_exec_min = 0
     settings.sec = 0
-    settings.qtde_video = 0
+    settings.qt_video = 0
     if(settings.type_exe == 0):
         print("*************************************************")
         print("Quanto tempo a ferramenta vai ficar executando (em minutos):", end=" ")
-        settings.min = int(input())
-        settings.sec = settings.min * 60
+        settings.time_exec_min = int(input())
+        settings.sec = settings.time_exec_min * 60
     elif(settings.type_exe == 1):
         print("*************************************************")
         print("Quantos vídeos vc deseja captar:", end=" ")
-        settings.qtde_video = int(input())
+        settings.qt_video = int(input())
 
-    video = ma.Video(model, settings)
+    config = db.createConfig(settings)
     
     # MIDIA
 
@@ -68,7 +68,7 @@ if __name__ == '__main__':
     print("ABRINDO MIDIA")
     pya.openTiktok()
     time.sleep(10)
-    pya.searchVideo(settings.chave_name)
+    pya.searchVideo(settings.param)
     time.sleep(2)
     pya.openVideo()
     time.sleep(1)
@@ -82,13 +82,15 @@ if __name__ == '__main__':
     videos = 0
     videos_ana = 0
 
-    while((settings.sec > end_tool - begin_tool) or (settings.qtde_video > videos)):
+    while((settings.sec > end_tool - begin_tool) or (settings.qt_video > videos)):
         
+        video = ma.Video(model, settings)
+
         # Find video
         while(True):
-            videoURL = pya.copyLinkVideo()
-            videoURL = videoURL.split("?q=")[0]
-            has_video = db.listarVideosURL(videoURL)
+            video_url = pya.copyLinkVideo()
+            video_url = video_url.split("?q=")[0]
+            has_video = db.listarVideosURL(video_url)
             if len(has_video) > 0:
                 pya.passVideo()
             else:
@@ -96,10 +98,11 @@ if __name__ == '__main__':
         
         time.sleep(1)
         analise = video.run()
-        if (analise.has_obj):
+        if (analise.is_valid):
             pya.likeVideo()
-            db.salvarVideo(videoURL)
             videos += 1
+
+        db.salvarVideo(config, video_url, analise.qt_frame, analise.qt_frame_param, analise.is_valid)
 
         videos_ana += 1
 

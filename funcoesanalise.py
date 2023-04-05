@@ -11,18 +11,19 @@ class Video:
         self.model = model
 
         self.chave = settings.chave
-        self.chave_name = settings.chave_name
-        self.sec_video = settings.sec_video
-        self.perc = settings.perc
+        self.param = settings.param
+        self.time_video_sec = settings.time_video_sec
+        self.perc_video = settings.perc_video / 100
         self.type_exe = settings.type_exe
-        self.min = settings.min 
+        self.time_exec_min = settings.time_exec_min 
         self.sec = settings.sec
-        self.qtde_video = settings.qtde_video
+        self.qt_video = settings.qt_video
 
-        self.save_video = False
+        self.is_valid = 0
         self.obj_appears = 0
         self.avg_conf_obj = 0
-        self.has_obj = 0
+        self.qt_frame = 0
+        self.qt_frame_param = 0
         self.list_conf_obj = []
         self.list_frame = []
         self.list_threads = []
@@ -50,9 +51,10 @@ class Video:
             confidence = data_frame.loc[index]['confidence']
             name = data_frame.loc[index]['name']
 
-            if (name == self.chave_name and confidence >= 0.5): 
-                self.has_obj +=1
+            if (name == self.param and confidence >= 0.5): 
+                self.qt_frame_param +=1
                 self.list_conf_obj.append(confidence)
+                break
 
     def run(self):
         begin_rframe = time.perf_counter()
@@ -67,8 +69,8 @@ class Video:
             end_rframe = time.perf_counter()
 
             if (np.array_equiv(frame, first_frame) or np.array_equiv(frame, sec_frame) 
-             or end_rframe - begin_rframe > self.sec_video): 
-                self.sec_video = end_rframe - begin_rframe
+             or end_rframe - begin_rframe > self.time_video_sec): 
+                self.time_video_sec = end_rframe - begin_rframe
                 break
 
             # # Cria tela com a analise dos frames
@@ -97,15 +99,15 @@ class Video:
 
     def validate(self):
 
-        qtde_frames = len(self.list_frame)
-        criterio_aceitacao = self.perc * qtde_frames
-        has_qtde_frame_obj = self.has_obj >= criterio_aceitacao
+        self.qt_frame = len(self.list_frame)
+        criterio_aceitacao = self.perc_video * self.qt_frame
+        has_qtde_frame_obj = self.qt_frame_param >= criterio_aceitacao
 
         if (has_qtde_frame_obj): 
             self.obj_appears = 1
             self.avg_conf_obj = round((sum(self.list_conf_obj)/len(self.list_conf_obj)),2)
-            self.save_video = True
-        
+            self.is_valid = 1
+
         return self
 
 # def pred_frame(model, frame):
