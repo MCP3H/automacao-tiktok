@@ -60,7 +60,8 @@ if __name__ == '__main__':
         print("Quantos vídeos vc deseja captar:", end=" ")
         settings.qt_video = int(input())
 
-    config = db.createConfig(settings)
+    conexao = db.abrirConexao()
+    config = db.createConfig(conexao, settings)
     
     # MIDIA
 
@@ -90,7 +91,7 @@ if __name__ == '__main__':
         while(True):
             video_url = pya.copyLinkVideo()
             video_url = video_url.split("?q=")[0]
-            has_video = db.listarVideosURL(video_url)
+            has_video = db.verificarVideo(video_url)
             if len(has_video) > 0:
                 pya.passVideo()
             else:
@@ -102,7 +103,7 @@ if __name__ == '__main__':
             pya.likeVideo()
             videos += 1
 
-        db.salvarVideo(config, video_url, analise.qt_frame, analise.qt_frame_param, analise.is_valid)
+        db.salvarVideo(conexao, config, video_url, analise.qt_frame, analise.qt_frame_param, analise.is_valid)
 
         videos_ana += 1
 

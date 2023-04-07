@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vídeos Salvos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+
+</head>
+
+<body>
+    <div class="container mt-4 mb-4">
+        <div class="row mb-4">
+            <h2> Vídeos Salvos </h2>
+            <h3> parâmetros recebidos </h3>
+        </div>
+        <div class="row">
+            <table id="tabelaVideos" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="d-none">ID</th>
+                        <th>URL</th>
+                        <th>Data</th>
+                        <th>Hora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for video in videos: %}
+                    <tr>
+                        <th class="d-none">{{ video[0] }}</th>
+                        <td><a href="{{ video[1] }}" target="_blank">{{ video[1] }}</a></td>
+                        <td>{{ video[2].strftime("%d/%m/%Y") }}</td>
+                        <td>{{ video[2].strftime("%H:%M:%S") }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th class="d-none">ID</th>
+                        <th>URL</th>
+                        <th>Data</th>
+                        <th>Hora</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#tabelaVideos').DataTable();
+    });
+</script>
+
+</html>

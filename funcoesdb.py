@@ -1,6 +1,6 @@
 # baixar o MySQL, se for Windows acesse o link: https://dev.mysql.com/downloads/installer/
 import mysql.connector  # baixar o connector: pip install mysql-connector-python
-import datetime
+from mysql.connector import Error
 
 # USE TCC;
 # DROP TABLE CONFIG;
@@ -29,64 +29,77 @@ import datetime
 # create, update, delete, usar: conexao.commit()
 # read, usar: cursor.fetchall()
 
-conexao = mysql.connector.connect(
-    host='localhost', user='root', password='admin', database='tcc')
 
-cursor = conexao.cursor()
+def abrirConexao():
+    conexao = None
+    try:
+        conexao = mysql.connector.connect(
+            host='localhost', user='root', password='admin', database='tcc')
+        print("Conectado.")
+    except Error as err:
+        print(f"Erro ao abrir conexão: '{err}'")
+    return conexao
 
 
-def listarVideos():
-    comando = f'SELECT * FROM video'
-    cursor.execute(comando)
-    resultado = cursor.fetchall()
+def executarQuery(conexao, query):
+    cursor = conexao.cursor()
+    try:
+        cursor.execute(query)
+        # conexao.commit()
+        print("Query executada.")
+    except Error as err:
+        print(f"Erro ao executar query: '{err}'")
+
+
+def lerQuery(conexao, query):
+    cursor = conexao.cursor()
+    resultado = None
+    try:
+        cursor.execute(query)
+        resultado = cursor.fetchall()
+        print("Registros retornados: ", cursor.rowcount)
+        return resultado
+    except Error as err:
+        print(f"Erro ao ler query: '{err}'")
+
+
+def fecharConexao(conexao):
+    cursor = conexao.cursor()
+    if (conexao.is_connected()):
+        try:
+            cursor.close()
+            conexao.close()
+            print("Desconectado.")
+        except Error as err:
+            print(f"Erro ao fechar conexão: '{err}'")
+
+
+def listarVideos(conexao):
+    resultado = lerQuery(conexao, f'SELECT * FROM video')
     return resultado
 
 
-def listarVideosURL(video_url):
-    comando = f'SELECT * FROM video where video_url = "{video_url}"'
-    cursor.execute(comando)
-    resultado = cursor.fetchall()
+def verificarVideo(conexao, video_url):
+    resultado = lerQuery(conexao, f'SELECT * FROM video where video_url = "{video_url}"')
     return resultado
 
 
-# def listarVideosNaoAvaliados():
-#     comando = f'SELECT * FROM video WHERE avaliado = 0'
-#     cursor.execute(comando)
-#     resultado = cursor.fetchall()
-#     return resultado
-
-
-def createConfig(settings):
+def createConfig(conexao, settings):
     param = settings.param
     time_video_sec = settings.time_video_sec
     perc_video = settings.perc_video
     time_exec_min = settings.time_exec_min
     qt_video = settings.qt_video
 
-    comando = f'SELECT * FROM config where param = "{param}" and time_video_sec = "{time_video_sec}" and perc_video = "{perc_video}" and time_exec_min = "{time_exec_min}" and qt_video = "{qt_video}" '
-    cursor.execute(comando)
-    resultado = cursor.fetchall()
-    if (len(resultado) > 0): 
+    resultado = lerQuery(conexao, f'SELECT * FROM config where param = "{param}" and time_video_sec = "{time_video_sec}" and perc_video = "{perc_video}" and time_exec_min = "{time_exec_min}" and qt_video = "{qt_video}"')
+    
+    if (len(resultado) > 0):
         return resultado[0][0]
     else:
-        comando = f'INSERT INTO config (param, time_video_sec, perc_video, time_exec_min, qt_video) VALUES ("{param}","{time_video_sec}","{perc_video}","{time_exec_min}","{qt_video}")'
-        cursor.execute(comando)
-        conexao.commit()
-        return cursor.lastrowid
+        executarQuery(conexao, f'INSERT INTO config (param, time_video_sec, perc_video, time_exec_min, qt_video) VALUES ("{param}","{time_video_sec}","{perc_video}","{time_exec_min}","{qt_video}")')
+        resultado = lerQuery(conexao, f'SELECT LAST_INSERT_ID()')
+        return resultado
 
 
-def salvarVideo(id_config, video_url, qt_frame, qt_frame_param, valid):
-    comando = f'INSERT INTO video (id_config, video_url, qt_frame, qt_frame_param, valid) VALUES ("{id_config}","{video_url}","{qt_frame}","{qt_frame_param}","{valid}")'
-    cursor.execute(comando)
-    conexao.commit()
-
-
-# def salvarMotivo(idVideo, motivo):
-#     comando = f'UPDATE video SET avaliado = 1, motivo = "{motivo}" WHERE idVideo = {idVideo}'
-#     cursor.execute(comando)
-#     conexao.commit()
-
-
-def fecharConexao():
-    cursor.close()
-    conexao.close()
+def salvarVideo(conexao, id_config, video_url, qt_frame, qt_frame_param, valid):
+    executarQuery(conexao, f'INSERT INTO video (id_config, video_url, qt_frame, qt_frame_param, valid) VALUES ("{id_config}","{video_url}","{qt_frame}","{qt_frame_param}","{valid}")')
