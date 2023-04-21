@@ -57,7 +57,7 @@ if __name__ == '__main__':
         settings.sec = settings.time_exec_min * 60
     elif(settings.type_exe == 1):
         print("*************************************************")
-        print("Quantos vídeos vc deseja captar:", end=" ")
+        print("Quantos vídeos vc deseja analisar:", end=" ")
         settings.qt_video = int(input())
 
     conexao = db.abrirConexao()
@@ -67,10 +67,10 @@ if __name__ == '__main__':
 
     print("*************************************************")
     print("ABRINDO MIDIA")
-    pya.openTiktok()
+    pya.openTiktok(settings.param)
     time.sleep(10)
-    pya.searchVideo(settings.param)
-    time.sleep(2)
+    #pya.searchVideo(settings.param)
+    #time.sleep(2)
     pya.openVideo()
     time.sleep(1)
     print("*************************************************")
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     videos = 0
     videos_ana = 0
 
-    while((settings.sec > end_tool - begin_tool) or (settings.qt_video > videos)):
+    while((settings.sec > end_tool - begin_tool) or (settings.qt_video > videos_ana)):
         
         video = ma.Video(model, settings)
 
@@ -91,7 +91,7 @@ if __name__ == '__main__':
         while(True):
             video_url = pya.copyLinkVideo()
             video_url = video_url.split("?q=")[0]
-            has_video = db.verificarVideo(video_url)
+            has_video = db.verificarVideo(conexao, video_url, config)
             if len(has_video) > 0:
                 pya.passVideo()
             else:
@@ -114,6 +114,7 @@ if __name__ == '__main__':
         
     print("*************************************************")
     print(f'Videos analisados: {videos_ana}')
+    print(f'Tempo de execucao: {end_tool - begin_tool}')
 
     pya.closeVideo()
-    db.fecharConexao()
+    db.fecharConexao(conexao)

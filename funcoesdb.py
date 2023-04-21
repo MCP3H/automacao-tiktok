@@ -8,9 +8,9 @@ from mysql.connector import Error
 #   `id_config` int NOT NULL AUTO_INCREMENT,
 #   `param` varchar(50) DEFAULT NULL,
 #   `time_video_sec` int DEFAULT 0,
-#   `perc_video` decimal DEFAULT 0,
-#   `time_exec_min` int DEFAULT 0,
+#   `perc_video` int DEFAULT 0,
 #   `qt_video` int DEFAULT 0,
+#   `crit_aceit` int DEFAULT 0,
 #   PRIMARY KEY (`id_config`)
 # );
 # DROP TABLE VIDEO;
@@ -45,7 +45,7 @@ def executarQuery(conexao, query):
     cursor = conexao.cursor()
     try:
         cursor.execute(query)
-        # conexao.commit()
+        conexao.commit()
         print("Query executada.")
     except Error as err:
         print(f"Erro ao executar query: '{err}'")
@@ -79,8 +79,8 @@ def listarVideos(conexao):
     return resultado
 
 
-def verificarVideo(conexao, video_url):
-    resultado = lerQuery(conexao, f'SELECT * FROM video where video_url = "{video_url}"')
+def verificarVideo(conexao, video_url, config):
+    resultado = lerQuery(conexao, f'SELECT * FROM video where video_url = "{video_url}" and id_config = "{config}"')
     return resultado
 
 
@@ -88,17 +88,17 @@ def createConfig(conexao, settings):
     param = settings.param
     time_video_sec = settings.time_video_sec
     perc_video = settings.perc_video
-    time_exec_min = settings.time_exec_min
     qt_video = settings.qt_video
+    crit_aceit = settings.crit_aceit
 
-    resultado = lerQuery(conexao, f'SELECT * FROM config where param = "{param}" and time_video_sec = "{time_video_sec}" and perc_video = "{perc_video}" and time_exec_min = "{time_exec_min}" and qt_video = "{qt_video}"')
+    resultado = lerQuery(conexao, f'SELECT * FROM config where param = "{param}" and time_video_sec = "{time_video_sec}" and perc_video = "{perc_video}" and qt_video = "{qt_video}" and crit_aceit = "{crit_aceit}"')
     
     if (len(resultado) > 0):
         return resultado[0][0]
     else:
-        executarQuery(conexao, f'INSERT INTO config (param, time_video_sec, perc_video, time_exec_min, qt_video) VALUES ("{param}","{time_video_sec}","{perc_video}","{time_exec_min}","{qt_video}")')
+        executarQuery(conexao, f'INSERT INTO config (param, time_video_sec, perc_video, qt_video, crit_aceit) VALUES ("{param}","{time_video_sec}","{perc_video}","{qt_video}","{crit_aceit}")')
         resultado = lerQuery(conexao, f'SELECT LAST_INSERT_ID()')
-        return resultado
+        return resultado[0][0]
 
 
 def salvarVideo(conexao, id_config, video_url, qt_frame, qt_frame_param, valid):

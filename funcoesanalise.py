@@ -10,13 +10,10 @@ class Video:
     def __init__(self, model, settings):
         self.model = model
 
-        self.chave = settings.chave
         self.param = settings.param
         self.time_video_sec = settings.time_video_sec
         self.perc_video = settings.perc_video / 100
-        self.type_exe = settings.type_exe
-        self.time_exec_min = settings.time_exec_min 
-        self.sec = settings.sec
+        self.crit_aceit = settings.crit_aceit / 100
         self.qt_video = settings.qt_video
 
         self.is_valid = 0
@@ -51,7 +48,7 @@ class Video:
             confidence = data_frame.loc[index]['confidence']
             name = data_frame.loc[index]['name']
 
-            if (name == self.param and confidence >= 0.5): 
+            if (name == self.param and confidence >= self.crit_aceit): 
                 self.qt_frame_param +=1
                 self.list_conf_obj.append(confidence)
                 break

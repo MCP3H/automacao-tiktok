@@ -14,3 +14,7 @@ git clone https://github.com/ultralytics/yolov5
 cd yolov5
 pip install -r requirements.txt
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s')
+
+gerar exec
+apaga dist/build e arquivo .spec - Hunter.spec
+pyinstaller --icon=icone.png --add-data "C:\Users\lucas\Desktop\Lucas\Faculdade\TCC\automacao-tiktok\icone.png;." --noconsole --name Hunter teste_interface_grafica.py

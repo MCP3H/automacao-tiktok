@@ -4,8 +4,9 @@ import numpy as np
 from PIL import ImageGrab
 import pyperclip
 
-def openTiktok():
-    webbrowser.open('https://www.tiktok.com/')
+def openTiktok(param):
+    param = param.replace(" ", "")
+    webbrowser.open('https://www.tiktok.com/tag/'+param)
 
 # def entrarConta():
 #     # mouse botão "Entrar"
@@ -41,7 +42,7 @@ def restartVideo(param):
 
 
 def openVideo():
-    pyg.click(x=850, y=460, duration=0.5)
+    pyg.click(x=450, y=560, duration=0.5)
 
 
 def closeVideo():
