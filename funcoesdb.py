@@ -75,7 +75,7 @@ def fecharConexao(conexao):
 
 
 def listarVideos(conexao):
-    resultado = lerQuery(conexao, f'SELECT * FROM video')
+    resultado = lerQuery(conexao, f'SELECT v.video_url, v.video_data, v.qt_frame, v.qt_frame_param, v.valid, c.id_config, c.param, c.time_video_sec, c.perc_video, c.qt_video, c.crit_aceit FROM video as v LEFT JOIN config as c ON v.id_config = c.id_config;')
     return resultado
 
 
@@ -84,7 +84,7 @@ def verificarVideo(conexao, video_url, config):
     return resultado
 
 
-def createConfig(conexao, settings):
+def criarParametro(conexao, settings):
     param = settings.param
     time_video_sec = settings.time_video_sec
     perc_video = settings.perc_video

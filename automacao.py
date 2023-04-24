@@ -61,17 +61,15 @@ if __name__ == '__main__':
         settings.qt_video = int(input())
 
     conexao = db.abrirConexao()
-    config = db.createConfig(conexao, settings)
+    config = db.criarParametro(conexao, settings)
     
     # MIDIA
 
     print("*************************************************")
     print("ABRINDO MIDIA")
-    pya.openTiktok(settings.param)
+    pya.abrirTiktokTag(settings.param)
     time.sleep(10)
-    #pya.searchVideo(settings.param)
-    #time.sleep(2)
-    pya.openVideo()
+    pya.abrirMidia()
     time.sleep(1)
     print("*************************************************")
     print("MIDIA CARREGADA")
@@ -89,7 +87,7 @@ if __name__ == '__main__':
 
         # Find video
         while(True):
-            video_url = pya.copyLinkVideo()
+            video_url = pya.copiarLinkVideo()
             video_url = video_url.split("?q=")[0]
             has_video = db.verificarVideo(conexao, video_url, config)
             if len(has_video) > 0:
@@ -100,14 +98,14 @@ if __name__ == '__main__':
         time.sleep(1)
         analise = video.run()
         if (analise.is_valid):
-            pya.likeVideo()
+            pya.curtirVideo()
             videos += 1
 
         db.salvarVideo(conexao, config, video_url, analise.qt_frame, analise.qt_frame_param, analise.is_valid)
 
         videos_ana += 1
 
-        pya.passVideo()
+        pya.passarVideo()
         time.sleep(1)
 
         end_tool = time.perf_counter()
@@ -116,5 +114,5 @@ if __name__ == '__main__':
     print(f'Videos analisados: {videos_ana}')
     print(f'Tempo de execucao: {end_tool - begin_tool}')
 
-    pya.closeVideo()
+    pya.fecharMidia()
     db.fecharConexao(conexao)
