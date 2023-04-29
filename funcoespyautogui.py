@@ -10,6 +10,10 @@ def abrirTiktokTag(param):
     webbrowser.open("https://www.tiktok.com/tag/" + param)
 
 
+def abrirLocalhost():
+    webbrowser.open("http://127.0.0.1:5000/")
+
+
 def abrirMidia():
     pyg.click(x=450, y=560, duration=0.5)
 
