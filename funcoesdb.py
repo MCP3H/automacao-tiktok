@@ -76,12 +76,12 @@ def fecharConexao(conexao):
 
 
 def listarVideos(conexao):
-    resultado = lerQuery(conexao, f'SELECT v.video_url, v.video_data, v.qt_frame, v.qt_frame_param, v.valid, c.id_parametro, c.objeto, c.time_video_sec, c.perc_video, c.qt_video, c.crit_aceit FROM video as v LEFT JOIN parametro as c ON v.id_parametro = c.id_parametro;')
+    resultado = lerQuery(conexao, f'SELECT v.video_url, v.video_data, v.qt_frame, v.qt_frame_param, v.valid, c.id_parametro, c.modelo, c.objeto, c.time_video_sec, c.perc_video, c.qt_video, c.crit_aceit FROM VIDEO as v LEFT JOIN PARAMETRO as c ON v.id_parametro = c.id_parametro;')
     return resultado
 
 
 def verificarVideo(conexao, video_url, parametro):
-    resultado = lerQuery(conexao, f'SELECT * FROM video where video_url = "{video_url}" and id_parametro = "{parametro}"')
+    resultado = lerQuery(conexao, f'SELECT * FROM VIDEO where video_url = "{video_url}" and id_parametro = "{parametro}"')
     return resultado
 
 
@@ -93,12 +93,12 @@ def criarParametro(conexao, settings):
     qt_video = settings.qt_video
     crit_aceit = settings.crit_aceit
 
-    resultado = lerQuery(conexao, f'SELECT * FROM parametro where modelo = "{modelo}" and objeto = "{objeto}" and time_video_sec = "{time_video_sec}" and perc_video = "{perc_video}" and qt_video = "{qt_video}" and crit_aceit = "{crit_aceit}"')
+    resultado = lerQuery(conexao, f'SELECT * FROM PARAMETRO where modelo = "{modelo}" and objeto = "{objeto}" and time_video_sec = "{time_video_sec}" and perc_video = "{perc_video}" and qt_video = "{qt_video}" and crit_aceit = "{crit_aceit}"')
     
     if (len(resultado) > 0):
         return resultado[0][0]
     else:
-        executarQuery(conexao, f'INSERT INTO parametro (modelo, objeto, time_video_sec, perc_video, qt_video, crit_aceit) VALUES ("{modelo}","{objeto}","{time_video_sec}","{perc_video}","{qt_video}","{crit_aceit}")')
+        executarQuery(conexao, f'INSERT INTO PARAMETRO (modelo, objeto, time_video_sec, perc_video, qt_video, crit_aceit) VALUES ("{modelo}","{objeto}","{time_video_sec}","{perc_video}","{qt_video}","{crit_aceit}")')
         resultado = lerQuery(conexao, f'SELECT LAST_INSERT_ID()')
         return resultado[0][0]
 

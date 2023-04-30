@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vídeos analisados</title>
+    <title> Vídeos analisados </title>
     <!-- Bootsratp -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
     <!-- jQuery e DataTable -->
@@ -22,6 +22,14 @@
     td span {
         font-size: 10px;
     }
+
+    .meta-sim {
+        background-color: rgb(226, 239, 218) !important;
+    }
+
+    .meta-nao {
+        background-color: rgb(252, 228, 214) !important;
+    }
 </style>
 
 <body>
@@ -30,11 +38,12 @@
             <h1> Vídeos analisados </h1>
         </div>
         <div class="row">
-            <table id="tabelaVideos" class="table table-striped nowrap">
+            <table id="tabelaVideos" class="table nowrap">
                 <thead>
                     <tr>
                         <th>Link</th>
                         <th>Data e Hora</th>
+                        <th>Dataset</th>
                         <th>Parâmetros</th>
                         <th>Resultado</th>
                     </tr>
@@ -47,26 +56,28 @@
                     3 - v.qt_frame_param
                     4 - v.valid
                     5 - c.id_config
-                    6 - c.param
-                    7 - c.time_video_sec
-                    8 - c.perc_video
-                    9 - c.qt_video
-                    10 - c.crit_aceit -->
-                    <tr>
+                    6 - c.modelo
+                    7 - c.objeto
+                    8 - c.time_video_sec
+                    9 - c.perc_video
+                    10 - c.qt_video
+                    11 - c.crit_aceit -->
+                    <tr class="{% if video[4] == 1 %} meta-sim {% else %} meta-nao {% endif %}">
                         <td><a href="{{ video[0] }}" target="_blank">{{ video[0] }}</a></td>
                         <td>{{ video[1].strftime("%d/%m/%Y") }} <br> {{ video[1].strftime("%H:%M") }}</td>
+                        <td>{{ video[5] }}</td>
                         <td>
-                            <span><b>ID:</b> {{ video[5] }}</span><br>
-                            <span><b>Objeto:</b> {{ video[6] }}</span><br>
-                            <span><b>Primeiros segundos analisados:</b> {{ video[7] }}</span><br>
-                            <span><b>Critério de aceitação do frame:</b> {{ video[10] }}</span><br>
-                            <span><b>Meta:</b> {{ video[8] }}%</span><br>
-                            <span><b>Quantidade de vídeos analisados:</b> {{ video[9] }}</span>
+                            <span><b>Modelo:</b> {{ video[6] }}</span><br>
+                            <span><b>Objeto:</b> {{ video[7] }}</span><br>
+                            <span><b>Primeiros segundos analisados:</b> {{ video[8] }}s</span><br>
+                            <span><b>Critério de aceitação:</b> {{ video[11] }}%</span><br>
+                            <span><b>Meta:</b> {{ video[9] }}%</span><br>
+                            <span><b>Quantidade de vídeos analisados:</b> {{ video[10] }}</span>
                         </td>
                         <td>
-                            <span><b>Qtd frames / Qtd frames aceitos:</b> {{ video[2] }} / {{ video[3] }}</span><br>
+                            <span><b>Quadros capturados / considerados:</b> {{ video[2] }} / {{ video[3] }}</span><br>
                             {% set percentual = video[3] / video[2] * 100 %}
-                            <span><b>Percentual frames:</b> {{'%0.1f' % percentual|float}}% </span><br>
+                            <span><b>Percentual quadros:</b> {{'%0.1f' % percentual|float}}% </span><br>
                             <span><b>Atingiu a meta: </b>{% if video[4] == 1 %} Sim {% else %} Não {% endif %}</span>
                         </td>
                     </tr>
@@ -76,6 +87,7 @@
                     <tr>
                         <th>Link</th>
                         <th>Data e Hora</th>
+                        <th>Dataset</th>
                         <th>Parâmetros</th>
                         <th>Resultado</th>
                     </tr>
@@ -100,7 +112,7 @@
 <script>
     $(document).ready(function () {
         $('#tabelaVideos').DataTable({
-            "pageLength": 5,
+            "pageLength": 2,
             // "searching": false,
             // "paging": false,
             // "info": false,
