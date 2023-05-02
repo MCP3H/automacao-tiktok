@@ -267,7 +267,7 @@ if __name__ == '__main__':
             
             settings = Parametros()
             settings.modelo = tipo_modelo
-            settings.param = objetos_pt.get(values['cmbObjeto'])
+            settings.param = values['cmbObjeto']
             settings.time_video_sec = int(values['sliderTempo'])
             settings.crit_aceit = int(values['sliderCriterio'])
             settings.perc_video = int(values['sliderPercentual'])
