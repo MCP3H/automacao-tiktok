@@ -50,7 +50,7 @@
                 </thead>
                 <tbody>
                     {% for video in videos: %}
-                    <!-- 0 - v.video_url
+                    <!-- 0 - v.video_link
                     1 - v.video_data
                     2 - v.qt_frame
                     3 - v.qt_frame_param
@@ -64,7 +64,7 @@
                     11 - c.crit_aceit -->
                     <tr class="{% if video[4] == 1 %} meta-sim {% else %} meta-nao {% endif %}">
                         <td><a href="{{ video[0] }}" target="_blank">{{ video[0] }}</a></td>
-                        <td>{{ video[1].strftime("%d/%m/%Y") }} <br> {{ video[1].strftime("%H:%M") }}</td>
+                        <td>{{ video[1].strftime("%d/%m/%Y") }} <br> {{ video[1].strftime("%H:%M:%S") }}</td>
                         <td>{{ video[5] }}</td>
                         <td>
                             <span><b>Modelo:</b> {{ video[6] }}</span><br>
@@ -112,11 +112,12 @@
 <script>
     $(document).ready(function () {
         $('#tabelaVideos').DataTable({
-            "pageLength": 2,
+            "pageLength": 5,
             // "searching": false,
             // "paging": false,
             // "info": false,
             // "ordering": false,
+            order: [[2, 'desc'], [1, 'desc']],
             dom: 'Bfrtip',
             buttons: [
                 'copy', 'csv', 'excel', 'pdf', 'print'

@@ -1,8 +1,5 @@
-
-import torch
-import cv2
-import numpy as np
 from PIL import Image
+import torch
 import os
 import re
 
@@ -31,7 +28,8 @@ def predicao(modelo, imagem):
         escore = data_frame.loc[index]['confidence']
         print(str(name) + ' - ' + str(escore))
 
-print('Imagens')
+print('----------')
+print('Predições')
 # Imprime o nome de cada arquivo
 print('----------')
 for arquivo in arquivos:

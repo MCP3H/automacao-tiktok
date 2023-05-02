@@ -4,9 +4,9 @@ import PySimpleGUI as sg
 from ctypes import windll
 import sys
 import torch
-import funcoespyautogui as pya
-import funcoesanalise as ma
-import funcoesdb as db
+import automacao as pya
+import analise as ma
+import banco as db
 import time
 import win32gui
 from app import app
@@ -51,7 +51,7 @@ if __name__ == '__main__':
                 style = style & ~WS_EX_TOOLWINDOW
                 style = style | WS_EX_APPWINDOW
                 set_window_style(hwnd, GWL_EXSTYLE, style)
-                img = PhotoImage(file='icone.png')
+                img = PhotoImage(file='img/icone/icone.png')
                 root.tk.call('wm', 'iconphoto', root._w, img)
                 root.withdraw()
                 root.deiconify()
@@ -201,16 +201,16 @@ if __name__ == '__main__':
 
     programa_executando = False
     flag_cancelamento = threading.Event()
-    thread = "thread da aplicação "
+    thread = "thread da aplicação"
 
-    def create_thread_app(janela, values):
+    def cria_thread_app(janela, values):
         global programa_executando
         programa_executando = True
         global thread
-        thread = threading.Thread(target=comecaAplicacao, args=(janela, values))
+        thread = threading.Thread(target=comeca_aplicacao, args=(janela, values))
         thread.start()
 
-    def comecaAplicacao(janela, values):
+    def comeca_aplicacao(janela, values):
 
         # VALIDA PARAM
 
@@ -268,6 +268,7 @@ if __name__ == '__main__':
             settings = Parametros()
             settings.modelo = tipo_modelo
             settings.param = values['cmbObjeto']
+            settings.param_en = objetos_pt.get(values['cmbObjeto'])
             settings.time_video_sec = int(values['sliderTempo'])
             settings.crit_aceit = int(values['sliderCriterio'])
             settings.perc_video = int(values['sliderPercentual'])
@@ -280,7 +281,7 @@ if __name__ == '__main__':
 
             print("*************************************************")
             print("ABRINDO MIDIA")
-            pya.abrirTiktokTag(settings.param)
+            pya.abrirTiktokTag(settings.param_en)
             time.sleep(10)
             pya.abrirMidia()
             time.sleep(1)
@@ -410,7 +411,7 @@ if __name__ == '__main__':
                 janela.extend_layout(janela, parametros_validados_interface)
                 janela.refresh()
                 
-            create_thread_app(janela, values)
+            cria_thread_app(janela, values)
 
     janela.close()
 

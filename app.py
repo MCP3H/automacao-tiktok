@@ -1,6 +1,6 @@
 from flask import Flask, render_template
-import funcoesdb as db
-import funcoespyautogui as pya
+import banco as db
+import automacao as pya
 from datetime import datetime
 
 app = Flask(__name__)

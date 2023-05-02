@@ -1,118 +1,39 @@
-import funcoespyautogui as pya
-import funcoesanalise as ma
-import funcoesdb as db
-import torch
-import time
+import webbrowser
+import pyautogui as pyg
+import pyperclip
 
-if __name__ == '__main__':
 
-    print("*************************************************")
-    print("YOLOV5 - Gerador de base de vídeos para treinamento de IA")
+def abrirTiktokTag(param):
+    param = param.replace(" ", "")
+    webbrowser.open("https://www.tiktok.com/tag/" + param)
 
-    # MODELO
 
-    print("*************************************************")
-    print("CARREGANDO O MODELO")
-    use_cuda = torch.cuda.is_available()
-    device = torch.device("cuda" if use_cuda else "cpu")
-    model = torch.hub.load('ultralytics/yolov5', 'yolov5s', device)
-    print("*************************************************")
-    print("MODELO CARREGADO")
-    
-    # PARAMS
+def abrirLocalhost():
+    webbrowser.open("http://127.0.0.1:5000/")
 
-    class Settings(object):
-        pass
-    settings = Settings()
 
-    print("*************************************************")
-    print("Em relação a esses objetos:")
-    print("*")
-    for key, value in model.names.items():
-        print(str(key) + ": " + value)
-    print("*")
-    print("Digita a chave do que vai ser detectado nos vídeos:", end=" ")
-    settings.chave = int(input())
-    settings.param = model.names[settings.chave]
+def abrirMidia():
+    pyg.click(x=450, y=560, duration=0.5)
 
-    print("*************************************************")
-    print("Quanto tempo de frame vai ser analisado dos vídeos (em segundos/video completo(0)):", end=" ")
-    settings.time_video_sec = int(input())
 
-    print("*************************************************")
-    print("Qual o percentual de frames que o objeto(" + settings.param + ") tem que aparecer no vídeo (0 a 100):", end=" ")
-    settings.perc_video = int(input())
+def fecharMidia():
+    pyg.click(x=50, y=135, duration=0.5)
 
-    print("*************************************************")
-    print("Tempo de execução(0) ou quantidade de vídeos(1):", end=" ")
-    settings.type_exe = int(input())
 
-    settings.time_exec_min = 0
-    settings.sec = 0
-    settings.qt_video = 0
-    if(settings.type_exe == 0):
-        print("*************************************************")
-        print("Quanto tempo a ferramenta vai ficar executando (em minutos):", end=" ")
-        settings.time_exec_min = int(input())
-        settings.sec = settings.time_exec_min * 60
-    elif(settings.type_exe == 1):
-        print("*************************************************")
-        print("Quantos vídeos vc deseja analisar:", end=" ")
-        settings.qt_video = int(input())
+def curtirVideo():
+    pyg.doubleClick(x=620, y=550, duration=0.5)
 
-    conexao = db.abrirConexao()
-    config = db.criarParametro(conexao, settings)
-    
-    # MIDIA
 
-    print("*************************************************")
-    print("ABRINDO MIDIA")
-    pya.abrirTiktokTag(settings.param)
-    time.sleep(10)
-    pya.abrirMidia()
-    time.sleep(1)
-    print("*************************************************")
-    print("MIDIA CARREGADA")
+def passarVideo():
+    pyg.click(x=1190, y=570, duration=0.5)
 
-    # ANALISE
 
-    begin_tool = time.perf_counter()
-    end_tool = time.perf_counter()
-    videos = 0
-    videos_ana = 0
+def copiarLinkVideo():
+    pyg.click(x=1190, y=65)
+    pyg.hotkey("ctrl", "c")
+    link = pyperclip.paste()
+    return link
 
-    while((settings.sec > end_tool - begin_tool) or (settings.qt_video > videos_ana)):
-        
-        video = ma.Video(model, settings)
 
-        # Find video
-        while(True):
-            video_url = pya.copiarLinkVideo()
-            video_url = video_url.split("?q=")[0]
-            has_video = db.verificarVideo(conexao, video_url, config)
-            if len(has_video) > 0:
-                pya.passVideo()
-            else:
-                break
-        
-        time.sleep(1)
-        analise = video.run()
-        if (analise.is_valid):
-            pya.curtirVideo()
-            videos += 1
-
-        db.salvarVideo(conexao, config, video_url, analise.qt_frame, analise.qt_frame_param, analise.is_valid)
-
-        videos_ana += 1
-
-        pya.passarVideo()
-        time.sleep(1)
-
-        end_tool = time.perf_counter()
-        
-    print("*************************************************")
-    print(f'Videos analisados: {videos_ana}')
-    print(f'Tempo de execucao: {end_tool - begin_tool}')
-
-    pya.fecharMidia()
-    db.fecharConexao(conexao)
+def fecharTiktok():
+    pyg.click(x=1890, y=20, duration=0.5)
