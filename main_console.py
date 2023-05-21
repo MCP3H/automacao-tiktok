@@ -8,7 +8,7 @@ from app import app
 if __name__ == '__main__':
 
     print("*************************************************")
-    print("YOLOV5 - Gerador de base de vídeos para treinamento de IA")
+    print("YOLOV5 - Gerador de base de vídeos")
 
     # MODELO
 
@@ -34,24 +34,25 @@ if __name__ == '__main__':
     for key, value in modelo.names.items():
         print(str(key) + ": " + value)
     print("*")
-    print("Digita a chave do objeto que vai ser detectado nos vídeos:", end=" ")
+    print("Digita a chave do objeto que vai ser analisado nos vídeos:", end=" ")
     settings.chave = int(input())
-    settings.param = modelo.names[settings.chave]
+    settings.param = modelo.names[settings.chave] # Aqui o param deveria ser pt-br
+    settings.param_en = modelo.names[settings.chave]
 
     print("*************************************************")
-    print("Qual o percentual de critério de aceitação dos frames (0 a 100):", end=" ")
+    print("O percentual do critério de aceitação do objeto (0 a 100):", end=" ")
     settings.crit_aceit = int(input())
 
     print("*************************************************")
-    print("Quanto tempo de frame vai ser analisado dos vídeos (em segundos):", end=" ")
+    print("Os primeiros segundos do vídeo que serão analisados (0 a 60):", end=" ")
     settings.time_video_sec = int(input())
 
     print("*************************************************")
-    print("Qual o percentual de frames que o objeto tem que aparecer no vídeo (0 a 100):", end=" ")
+    print("O percentual da quantidade de quadros considerados (0 a 100):", end=" ")
     settings.perc_video = int(input())
 
     print("*************************************************")
-    print("Quantos vídeos vc deseja analisar:", end=" ")
+    print("Quantidade de vídeos que serão analisados (0 a 100):", end=" ")
     settings.qt_video = int(input())
 
     conexao = db.abrirConexao()
@@ -61,7 +62,7 @@ if __name__ == '__main__':
 
     print("*************************************************")
     print("ABRINDO MIDIA")
-    pya.abrirTiktokTag(settings.param)
+    pya.abrirTiktokTag(settings.param_en)
     time.sleep(10)
     pya.abrirMidia()
     time.sleep(1)

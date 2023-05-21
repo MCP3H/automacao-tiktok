@@ -20,8 +20,8 @@ if __name__ == '__main__':
     # Definindo o tema da interface
     sg.theme('DarkGrey3')
 
-    # Tive que criar dessa forma a interface para evitar que o usuário mova a janela do programa, 
-    # e manter o programa na barra do windows
+    # Tive que criar dessa forma a interface para evitar que o usuário mova a janela do programa e interfira na hora
+    # de pegar os quadros, e tambem para manter o programa na barra do windows
     #https://github.com/PySimpleGUI/PySimpleGUI/issues/150 - Missing program icon on taskbar when using no_titlebar = True
 
     GWL_EXSTYLE = -20
@@ -62,7 +62,7 @@ if __name__ == '__main__':
             hwnd = windll.user32.GetParent(root.winfo_id())
             win32gui.SetForegroundWindow(hwnd)
 
-    # Criei um dicionário que já tem todos os objetos possíveis de detectar do YOLO
+    # Crio um dicionário que já tem todos os objetos possíveis de detectar do YOLO
     objetos_pt = {
         'avião': 'airplane',
         'banana': 'banana',
@@ -148,22 +148,22 @@ if __name__ == '__main__':
 
     # Defino a estrutura dos elementos da interface
     interface = [
-        [sg.Text('Preencha o objeto que vai ser detectado nos vídeos:')],
+        [sg.Text('Preencha o objeto que vai ser analisado nos vídeos:')],
         [sg.Combo(list(objetos_pt.keys()), size=(40,20), key='cmbObjeto')],
 
-        [sg.Text('Qual o percentual de critério de aceitação dos frames:')],
+        [sg.Text('O percentual do critério de aceitação do objeto:')],
         [sg.Slider(range=(0, 100), orientation='h', size=(40,20), default_value=50, key='sliderCriterio', enable_events=True, disable_number_display=True)],
         [sg.Text('50', key='sliderCriterioText', size=(3, 1))],
         
-        [sg.Text('Quanto tempo de frame vai ser analisado dos vídeos (em segundos):')],
+        [sg.Text('Os primeiros segundos do vídeo que serão analisados:')],
         [sg.Slider(range=(0, 60), orientation='h', size=(40,20), default_value=0, key='sliderTempo', enable_events=True, disable_number_display=True)],
         [sg.Text('0', key='sliderTempoText', size=(3, 1))],
 
-        [sg.Text('Qual o percentual de frames que o objeto tem que aparecer no vídeo:')],
+        [sg.Text('O percentual da quantidade de quadros considerados:')],
         [sg.Slider(range=(0, 100), orientation='h', size=(40,20), default_value=0, key='sliderPercentual', enable_events=True, disable_number_display=True)],
         [sg.Text('0', key='sliderPercentualText', size=(3, 1))],
 
-        [sg.Text('Quantos vídeos você deseja analisar:', visible=True, key='lblExec')],
+        [sg.Text('Quantidade de vídeos que serão analisados:', visible=True, key='lblExec')],
         [sg.Slider(range=(0, 100), orientation='h', size=(40,20), default_value=0, key='exec', visible=True, enable_events=True, disable_number_display=True)],
         [sg.Text('0', key='execText', size=(3, 1))],
 
@@ -196,7 +196,7 @@ if __name__ == '__main__':
         [sg.Text(0, key="videoAnalisadoParam")]
     ]
 
-    # Criao a janela com os elementos definidos na estrutura interface
+    # Crio a janela com os elementos definidos na estrutura interface
     janela = Janela('Hunter', interface, location=(1350, 200), grab_anywhere=False, grab_anywhere_using_control=False, icon="icone.ico", no_titlebar=True, finalize=True)
 
     programa_executando = False
@@ -252,8 +252,8 @@ if __name__ == '__main__':
         if not flag_cancelamento.is_set():
             tipo_modelo = 'yolov5x' # yolov5n, yolov5s, yolov5m, yolov5l, yolov5x  -- Coloquei em ordem qual modelo esta mais treinado
             use_cuda = torch.cuda.is_available()
-            device = torch.device("cuda" if use_cuda else "cpu")
-            model = torch.hub.load('ultralytics/yolov5', tipo_modelo, device)
+            dispositivo = torch.device("cuda" if use_cuda else "cpu")
+            modelo = torch.hub.load('ultralytics/yolov5', tipo_modelo, dispositivo)
 
         if not flag_cancelamento.is_set():
             global algoritmo_carregado_interface_carregado
@@ -303,9 +303,9 @@ if __name__ == '__main__':
         end_tool = time.perf_counter()
         while(not flag_cancelamento.is_set() and settings.qt_video > videos_ana):
             
-            video = ma.Video(model, settings)
+            video = ma.Video(modelo, settings)
 
-            # Find video
+            # Encontra o video
             while(True):
                 video_url = pya.copiarLinkVideo()
                 video_url = video_url.split("?q=")[0]
@@ -320,7 +320,7 @@ if __name__ == '__main__':
 
             analise = video.run()
             if (analise.is_valid):
-                # pya.likeVideo()
+                # pya.likeVideo() - para curtir precisa estar lgoado na rede social
                 videos += 1
                 janela['videoAnalisadoParam'].update(str(videos))
 
@@ -342,14 +342,13 @@ if __name__ == '__main__':
         if not flag_cancelamento.is_set():
             pya.fecharMidia()
             db.fecharConexao(conexao)
+            janela['videoAnalisado'].update(str(videos_ana))
+            janela['videoAnalisadoParam'].update(str(videos))
+            janela.windowSeal()
             janela['btnExecutar'].update(disabled=False, button_color=("#dfddc7", "#a34a28"))
         
         global programa_executando
         programa_executando = False
-
-        # if not flag_cancelamento.is_set():
-        #     if (programa_executando == False):
-        #         janela.finalize()
 
     # Loop de eventos para a interface gráfica
     while True:
@@ -395,7 +394,7 @@ if __name__ == '__main__':
             janela.layout(new_interface) 
             janela.refresh()
 
-            resp = sg.popup("Deseja encerrar a execução da aplicação?", background_color="DarkBlue", custom_text=("Sim", "Não"), no_titlebar=True, location=(1350, 200))
+            resp = sg.popup("Deseja encerrar a execução da aplicação?", background_color="DarkRed", custom_text=("Sim", "Não"), no_titlebar=True, location=(1350, 200))
             if resp == "Sim":
                 flag_cancelamento.set()
                 if (programa_executando == False): break

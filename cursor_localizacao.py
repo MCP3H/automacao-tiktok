@@ -1,5 +1,6 @@
 import pyautogui as pyg
 
+# Imprime no console a localização do cursor 
 print('Apertar Ctrl-C para fechar.')
 try:
     while True:
